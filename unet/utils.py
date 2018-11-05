@@ -135,17 +135,18 @@ def load_unet(model_name):
 def jaccard_sim(list1, list2, threshold = 0.5):
     list1 = [(map > threshold).astype(np.uint8) for map in list1]
     list2 = [(map > threshold).astype(np.uint8) for map in list2]
-    jac = [jaccard(list1[i].flatten(), list2[i].flatten()) for i in range(len(list1))]
+    jac = [1-jaccard(list1[i].flatten(), list2[i].flatten()) for i in range(len(list1))]
     return(jac)
 
 ############################################################
 #  Join Mask Results for Plotting
 ############################################################
 
-def join_masks(msk, exp, threshold = 0.5):
-    msk = (msk > threshold).astype(np.uint8)
-    join = np.append(msk, exp, axis=2)
-    join = np.append(join, msk, axis=2)
+def join_masks(msk1, msk2, threshold = 0.5):
+    msk1 = (msk1 > threshold).astype(np.uint8)*255
+    msk2 = (msk2 > threshold).astype(np.uint8)*255
+    join = np.append(msk1, msk2, axis=2)
+    join = np.append(join, msk1, axis=2)
     return(join)
 
 ############################################################
