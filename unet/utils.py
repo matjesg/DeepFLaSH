@@ -98,35 +98,34 @@ def load_unet(model_name):
                                precision,
                                f1,
                                mcor])
-        return (model)
+    else:
+        path = 'saved_models'
+        id = ''
+        if not os.path.isdir(path):
+            os.makedirs(path)
 
-    path = 'saved_models'
-    id = ''
-    if not os.path.isdir(path):
-        os.makedirs(path)
+        file_path = os.path.join(path, model_name + '_unet.h5')
 
-    file_path = os.path.join(path, model_name + '_unet.h5')
+        if not os.path.isfile(file_path):
+            if model_name == 'cFOS':
+                id = '1f8KhLuvwCVmxBxECMSUjLG5slczBzBhj'
+            elif model_name == 'Parv':
+                id = '1lXsUUJWbjk86ZX6IQQaKH7gAwUO_nlOV'
+            else:
+                print('Please provide correct unet name (cFOS, Parv or new)')
+                return
 
-    if not os.path.isfile(file_path):
-        if model_name == 'cFOS':
-            id = '1f8KhLuvwCVmxBxECMSUjLG5slczBzBhj'
-        elif model_name == 'Parv':
-            id = '1lXsUUJWbjk86ZX6IQQaKH7gAwUO_nlOV'
-        else:
-            print('Please provide correct unet name (cFOS, Parv or new)')
-            return
+            print('ID: ', id)
+            print('Download file to ', file_path)
 
-        print('ID: ', id)
-        print('Download file to ', file_path)
+            download_file_from_google_drive(id, file_path)
 
-        download_file_from_google_drive(id, file_path)
-
-    model = load_model(file_path,
-                       custom_objects={'recall': recall,
-                                        'precision': precision,
-                                        'f1': f1,
-                                        'mcor': mcor,
-                                        'weighted_bce_dice_loss': weighted_bce_dice_loss})
+        model = load_model(file_path,
+                           custom_objects={'recall': recall,
+                                            'precision': precision,
+                                            'f1': f1,
+                                            'mcor': mcor,
+                                            'weighted_bce_dice_loss': weighted_bce_dice_loss})
     return(model)
 
 ############################################################
