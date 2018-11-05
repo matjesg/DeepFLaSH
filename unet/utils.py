@@ -10,12 +10,14 @@ import requests
 from keras.preprocessing.image import img_to_array, load_img
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
+from keras.optimizers import Adam
 from unet.metrics import recall, precision, f1, mcor
 from unet.losses import weighted_bce_dice_loss
 from scipy.misc import imsave
 from scipy.spatial.distance import jaccard
 import numpy as np
 import matplotlib.pyplot as plt
+from unet.model import unet_1024
 
 ############################################################
 #  Google Drive Download
@@ -82,6 +84,22 @@ def saveMasks(msk_list, img_names, filetype = 'tif'):
 ############################################################
 
 def load_unet(model_name):
+
+    if model_name == 'new':
+        model = unet_1024(img_rows=1024,
+                          img_cols=1024,
+                          num_img_channels=1,
+                          num_mask_channels=1)
+
+        model.compile(loss = weighted_bce_dice_loss(),
+                      optimizer = Adam(lr=0.001),
+                      metrics=['accuracy',
+                               recall,
+                               precision,
+                               f1,
+                               mcor])
+        return (model)
+
     path = 'saved_models'
     id = ''
     if not os.path.isdir(path):
@@ -95,7 +113,7 @@ def load_unet(model_name):
         elif model_name == 'Parv':
             id = '1lXsUUJWbjk86ZX6IQQaKH7gAwUO_nlOV'
         else:
-            print('Please provide correct unet name (cFOS or Parv)')
+            print('Please provide correct unet name (cFOS, Parv or new)')
             return
 
         print('ID: ', id)
