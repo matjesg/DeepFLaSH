@@ -91,7 +91,7 @@ def load_unet(model_name):
                           num_img_channels=1,
                           num_mask_channels=1)
 
-        model.compile(loss = weighted_bce_dice_loss(),
+        model.compile(loss = weighted_bce_dice_loss,
                       optimizer = Adam(lr=0.001),
                       metrics=['accuracy',
                                recall,
