@@ -59,10 +59,10 @@ def save_response_content(response, destination):
 ############################################################
 def readImg(img_name, path, channels, dimensions):
     if channels == 1:
-        grayscale = 1
+        color_m = 'grayscale'
     else:
-        grayscale = 0
-    img = load_img(os.path.join(path, img_name), grayscale=grayscale, target_size = [dimensions, dimensions])
+        color_m = 'rgb'
+    img = load_img(os.path.join(path, img_name), color_mode = color_m, target_size = [dimensions, dimensions])
     img = img_to_array(img)
     img /= 255
 
