@@ -107,7 +107,7 @@ def load_unet(model_name):
         file_path = os.path.join(path, model_name + '_unet.h5')
 
         if not os.path.isfile(file_path):
-            if model_name == 'cFOS':
+            if model_name == 'cFOS_Wue':
                 id = '1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis'
             elif model_name == 'Parv':
                 id = '1VtxyOXhuYVDAC8pkzx3SG9sZfvXqHDZI'
@@ -118,7 +118,7 @@ def load_unet(model_name):
             elif model_name == 'cFOS_Inns2':
                 id = '1TGxZC93YUP1kp1xmboxl6fJEqU4oDRzP'
             else:
-                print('Please provide correct unet name (cFOS, Parv, cFOS_Inns1, cFOS_Inns2, cFOS_Mue or new)')
+                print('Please provide allowed model name: cFOS_Wue, cFOS_Inns1, cFOS_Inns2, cFOS_Mue, Parv or new')
                 return
 
             print('ID: ', id)

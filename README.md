@@ -12,15 +12,41 @@ Train or fine-tune your own model and segment your images [![Colab](https://cola
 Demo notebook [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matjesg/broccoli/blob/master/demo.ipynb)
 
 ## Model Library
-[cFOS_Wue](https://drive.google.com/open?id=1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis)
 
-[cFOS_Inns1](https://drive.google.com/open?id=1n6oGHaIvhbcBtzrkgWT6igg8ZXSOvE0D)
+This list contains download links to the weights of the selected models as well as an example of their corresponding training images and masks.
 
-[cFOS_Inns2](https://drive.google.com/open?id=1TGxZC93YUP1kp1xmboxl6fJEqU4oDRzP)
+You can select and apply these models within our Jupyter Notebook.
+* [cFOS_Wue](https://drive.google.com/open?id=1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis): 
+Trained on 36 image-mask pairs.
+    
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Wue.png" width="250" height="250" alt="cFOS_Wue">
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Wue_mask.png" width="250" height="250" alt="cFOS_Wue_mask">
 
-[cFOS_Mue](https://drive.google.com/open?id=1GFOsnLFY8nKDVcBTX7MvMTjoiYfhs91b)
+* [cFOS_Inns1](https://drive.google.com/open?id=1n6oGHaIvhbcBtzrkgWT6igg8ZXSOvE0D): Fine-tuned on [cFOS_Wue](https://drive.google.com/open?id=1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis) 
+with five image-mask pairs.
 
-[Parv](https://drive.google.com/open?id=1VtxyOXhuYVDAC8pkzx3SG9sZfvXqHDZI)
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Inns1.png" width="250" height="250" alt="cFOS_Inns1">
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Inns1_mask.png" width="250" height="250" alt="cFOS_Inns1_mask">
+
+* [cFOS_Inns2](https://drive.google.com/open?id=1TGxZC93YUP1kp1xmboxl6fJEqU4oDRzP):
+Fine-tuned on [cFOS_Wue](https://drive.google.com/open?id=1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis) 
+with five image-mask pairs.
+
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Inns2.png" width="250" height="250" alt="cFOS_Inns2">
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Inns2_mask.png" width="250" height="250" alt="cFOS_Inns2_mask">
+
+* [cFOS_Mue](https://drive.google.com/open?id=1GFOsnLFY8nKDVcBTX7MvMTjoiYfhs91b):
+Fine-tuned on [cFOS_Wue](https://drive.google.com/open?id=1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis) 
+with five image-mask pairs.
+
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Mue.png" width="250" height="250" alt="cFOS_Mue">
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/cFOS_Mue_mask.png" width="250" height="250" alt="cFOS_Mue_mask">
+
+* [Parv](https://drive.google.com/open?id=1VtxyOXhuYVDAC8pkzx3SG9sZfvXqHDZI):
+Trained on 36 images
+    
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/Parv.png" width="250" height="250" alt="Parv">
+    <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/Parv_mask.png" width="250" height="250" alt="Parv">
 
 ## Acronym
 A **Deep**-learning pipeline for **F**luorescent **La**bel **S**egmentation that learns from **H**uman experts
