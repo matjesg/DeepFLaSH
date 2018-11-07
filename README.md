@@ -11,9 +11,16 @@ Train or fine-tune your own model and segment your images [![Colab](https://cola
 
 Demo notebook [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matjesg/broccoli/blob/master/demo.ipynb)
 
-## Download Model Weights
-[cFOS Link](https://drive.google.com/open?id=1f8KhLuvwCVmxBxECMSUjLG5slczBzBhj)
-, [Parv Link](https://drive.google.com/open?id=1lXsUUJWbjk86ZX6IQQaKH7gAwUO_nlOV)
+## Model Library
+[cFOS_Wue](https://drive.google.com/open?id=1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis)
+
+[cFOS_Inns1](https://drive.google.com/open?id=1n6oGHaIvhbcBtzrkgWT6igg8ZXSOvE0D)
+
+[cFOS_Inns2](https://drive.google.com/open?id=1TGxZC93YUP1kp1xmboxl6fJEqU4oDRzP)
+
+[cFOS_Mue](https://drive.google.com/open?id=1GFOsnLFY8nKDVcBTX7MvMTjoiYfhs91b)
+
+[Parv](https://drive.google.com/open?id=1VtxyOXhuYVDAC8pkzx3SG9sZfvXqHDZI)
 
 ## Acronym
 A **Deep**-learning pipeline for **F**luorescent **La**bel **S**egmentation that learns from **H**uman experts

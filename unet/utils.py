@@ -108,11 +108,17 @@ def load_unet(model_name):
 
         if not os.path.isfile(file_path):
             if model_name == 'cFOS':
-                id = '1f8KhLuvwCVmxBxECMSUjLG5slczBzBhj'
+                id = '1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis'
             elif model_name == 'Parv':
-                id = '1lXsUUJWbjk86ZX6IQQaKH7gAwUO_nlOV'
+                id = '1VtxyOXhuYVDAC8pkzx3SG9sZfvXqHDZI'
+            elif model_name == 'cFOS_Mue':
+                id = '1GFOsnLFY8nKDVcBTX7MvMTjoiYfhs91b'
+            elif model_name == 'cFOS_Inns1':
+                id = '1n6oGHaIvhbcBtzrkgWT6igg8ZXSOvE0D'
+            elif model_name == 'cFOS_Inns2':
+                id = '1TGxZC93YUP1kp1xmboxl6fJEqU4oDRzP'
             else:
-                print('Please provide correct unet name (cFOS, Parv or new)')
+                print('Please provide correct unet name (cFOS, Parv, cFOS_Inns1, cFOS_Inns2, cFOS_Mue or new)')
                 return
 
             print('ID: ', id)
