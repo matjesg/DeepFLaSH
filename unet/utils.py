@@ -114,7 +114,7 @@ def load_unet(model_name):
 
         if not os.path.isfile(file_path):
             if model_name == 'cFOS_Wue':
-                id = '1u1jAqxRpQh2hjE0W2vdHNCyhQsM5uAis'
+                id = '1m-7f3Xq1wQnf72ZCSkavjF0dBfrEEZE4'
             elif model_name == 'Parv':
                 id = '1VtxyOXhuYVDAC8pkzx3SG9sZfvXqHDZI'
             elif model_name == 'cFOS_Mue':
@@ -268,8 +268,25 @@ def jaccard_roi(a,b):
 ############################################################
 
 def jaccard_images(regions_x, regions_y, roi_threshold=0.5):
-    res_list = [[a.label, b.label, jaccard_roi(a.coords, b.coords)] for a, b in product(regions_x, regions_y)]
+    res_list = list(generate_pairs(regions_x,regions_y, thres = roi_threshold))
     res = np.asarray(res_list)
     res_fil = res[res[:, 2] >= roi_threshold]
 
     return (len(res_fil) / (len(regions_x) + len(regions_y) - len(res_fil)))
+
+############################################################
+#  Pair generator function for ROI matching
+############################################################
+def generate_pairs(regions_a, regions_b, thres=0.5):
+    match_a = np.array([])
+    match_b = np.array([])
+
+    for a in regions_a:
+        for b in regions_b:
+            if not (np.isin(a.label, match_a) or np.isin(b.label, match_b)):
+                jacc = jaccard_roi(a.coords, b.coords)
+
+                if jacc > thres:
+                    match_a = np.append(match_a, a.label)
+                    match_b = np.append(match_b, b.label)
+                yield a.label, b.label, jacc
