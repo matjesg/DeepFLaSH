@@ -7,17 +7,23 @@ Written by Matthias Griebel
 
 import os
 import requests
+import numpy as np
+import matplotlib.pyplot as plt
 from keras.preprocessing.image import img_to_array, load_img
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
 from keras.optimizers import Adam
-from unet.metrics import recall, precision, f1, mcor
-from unet.losses import weighted_bce_dice_loss
 from scipy.misc import imsave
 from scipy.spatial.distance import jaccard
-import numpy as np
-import matplotlib.pyplot as plt
+from scipy import ndimage
+from skimage.feature import peak_local_max
+from skimage.segmentation import clear_border
+from skimage.measure import label, regionprops
+from skimage.morphology import square, watershed
+from itertools import product
 from unet.model import unet_1024
+from unet.metrics import recall, precision, f1, mcor
+from unet.losses import weighted_bce_dice_loss
 
 ############################################################
 #  Google Drive Download
@@ -210,3 +216,60 @@ def create_generator(img_list, msk_list, SEED=1, BATCH_SIZE=4):
                                         seed=SEED, batch_size=BATCH_SIZE)
 
     return (zip(image_generator, mask_generator))
+
+############################################################
+#  Analyze regions
+############################################################
+
+def analyze_regions(mask, image=None, thresh=0.5, min_pixel=15):
+    mask = np.squeeze(mask, axis=2)
+
+    # apply threshold
+    # bw = closing(mask > thresh, square(2))
+    bw = mask > thresh
+
+    # Watershed: Separates objects in image by generate the markers
+    # as local maxima of the distance to the background
+    distance = ndimage.distance_transform_edt(bw)
+    local_maxi = peak_local_max(distance, indices=False, footprint=square(2), labels=bw)
+    markers = label(local_maxi)
+    labels_ws = watershed(-distance, markers, mask=bw)
+
+    # remove artifacts connected to image border
+    cleared = clear_border(labels_ws)
+
+    # label image regions
+    label_image = label(cleared)
+
+    if image is not None:
+        image = np.squeeze(image, axis=2)
+        regions = regionprops(label_image, intensity_image=image)
+
+    else:
+        regions = regionprops(label_image)
+
+    # remove min pixel
+    regions = [region for region in regions if region.area > min_pixel]
+
+    return(regions)
+
+############################################################
+#  Calculate Jaccard Index for ROI matching
+############################################################
+
+def jaccard_roi(a,b):
+  x = [':'.join(x) for x in a.astype(str).tolist()]
+  y = [':'.join(x) for x in b.astype(str).tolist()]
+  z = np.unique(np.concatenate((x,y)))
+  return((len(x) + len(y) - z.size)/z.size)
+
+############################################################
+#  Calculate Jaccard Index for coder segmentation comparison
+############################################################
+
+def jaccard_images(regions_x, regions_y, roi_threshold=0.5):
+    res_list = [[a.label, b.label, jaccard_roi(a.coords, b.coords)] for a, b in product(regions_x, regions_y)]
+    res = np.asarray(res_list)
+    res_fil = res[res[:, 2] >= roi_threshold]
+
+    return (len(res_fil) / (len(regions_x) + len(regions_y) - len(res_fil)))
