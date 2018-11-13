@@ -1,3 +1,10 @@
+"""
+Colab Utils
+Convenience utility functions for Google Colab
+Licensed under the MIT License (see LICENSE for details)
+Written by Matthias Griebel
+"""
+
 from google.colab import files
 from unet import utils
 import os
@@ -19,7 +26,3 @@ def load_samples(path, suffix):
   file_names = [fname for fname in sorted(os.listdir(file_path)) if fname.endswith(suffix + '.tif')]
   file_list = [utils.readImg(x, path=file_path, channels=1, dimensions = 1024) for x in file_names]
   return(file_names, file_list)
-
-
-
-

@@ -1,5 +1,5 @@
 """
-U-Net
+Utils
 Common utility functions and classes.
 Licensed under the MIT License (see LICENSE for details)
 Written by Matthias Griebel
@@ -14,13 +14,11 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
 from keras.optimizers import Adam
 from scipy.misc import imsave
-from scipy.spatial.distance import jaccard
 from scipy import ndimage
 from skimage.feature import peak_local_max
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
-from skimage.morphology import square, watershed
-from itertools import product
+from skimage.morphology import watershed
 from unet.model import unet_1024
 from unet.metrics import recall, precision, f1, mcor
 from unet.losses import weighted_bce_dice_loss
@@ -141,16 +139,6 @@ def load_unet(model_name):
     return(model)
 
 ############################################################
-#  Compare Masks to Expert using the Jaccard Similarity
-############################################################
-
-def jaccard_sim(list1, list2, threshold = 0.5):
-    list1 = [(map > threshold).astype(np.uint8) for map in list1]
-    list2 = [(map > threshold).astype(np.uint8) for map in list2]
-    jac = [1-jaccard(list1[i].flatten(), list2[i].flatten()) for i in range(len(list1))]
-    return(jac)
-
-############################################################
 #  Join Mask Results for Plotting
 ############################################################
 
@@ -221,72 +209,48 @@ def create_generator(img_list, msk_list, SEED=1, BATCH_SIZE=4):
 #  Analyze regions
 ############################################################
 
-def analyze_regions(mask, image=None, thresh=0.5, min_pixel=15):
-    mask = np.squeeze(mask, axis=2)
+def roi_eval(mask, image=None, thresh=0.5, min_pixel=15,
+             do_watershed=True, exclude_border=True, return_mask=False):
+    if mask.ndim == 3:
+        mask = np.squeeze(mask, axis=2)
 
-    # apply threshold
+    # apply threshold to mask
     # bw = closing(mask > thresh, square(2))
-    bw = mask > thresh
+    bw = (mask > thresh).astype(int)
+
+    # label image regions
+    label_image = label(bw)
 
     # Watershed: Separates objects in image by generate the markers
     # as local maxima of the distance to the background
-    distance = ndimage.distance_transform_edt(bw)
-    local_maxi = peak_local_max(distance, indices=False, footprint=square(2), labels=bw)
-    markers = label(local_maxi)
-    labels_ws = watershed(-distance, markers, mask=bw)
+    if do_watershed:
+        distance = ndimage.distance_transform_edt(bw)
+        # Minimum number of pixels separating peaks in a region of `2 * min_distance + 1`
+        # (i.e. peaks are separated by at least `min_distance`)
+        min_distance = int(np.ceil(np.sqrt(min_pixel / np.pi)))
+        local_maxi = peak_local_max(distance, indices=False, exclude_border=False,
+                                    min_distance=min_distance, labels=label_image)
+        markers = label(local_maxi)
+        label_image = watershed(-distance, markers, mask=bw)
 
     # remove artifacts connected to image border
-    cleared = clear_border(labels_ws)
+    if exclude_border:
+        label_image = clear_border(label_image)
 
-    # label image regions
-    label_image = label(cleared)
+    # remove areas < min pixel
+    _ = [np.place(label_image, label_image == i, 0) for i in range(1, label_image.max()) if
+         np.sum(label_image == i) < min_pixel]
 
     if image is not None:
-        image = np.squeeze(image, axis=2)
+        if image.ndim == 3:
+            image = np.squeeze(image, axis=2)
         regions = regionprops(label_image, intensity_image=image)
 
     else:
         regions = regionprops(label_image)
 
-    # remove min pixel
-    regions = [region for region in regions if region.area > min_pixel]
+    if return_mask:
+        return (label_image, regions)
 
-    return(regions)
-
-############################################################
-#  Calculate Jaccard Index for ROI matching
-############################################################
-
-def jaccard_roi(a,b):
-  x = [':'.join(x) for x in a.astype(str).tolist()]
-  y = [':'.join(x) for x in b.astype(str).tolist()]
-  z = np.unique(np.concatenate((x,y)))
-  return((len(x) + len(y) - z.size)/z.size)
-
-############################################################
-#  Calculate Jaccard Index for coder segmentation comparison
-############################################################
-
-def jaccard_images(regions_x, regions_y, roi_threshold=0.5):
-    res_list = list(generate_pairs(regions_x,regions_y, thres = roi_threshold))
-    res = np.asarray(res_list)
-    res_fil = res[res[:, 2] >= roi_threshold]
-
-    return (len(res_fil) / (len(regions_x) + len(regions_y) - len(res_fil)))
-
-############################################################
-#  Pair generator function for ROI matching
-############################################################
-def generate_pairs(regions_a, regions_b, thres=0.5):
-    match_a = np.array([])
-    match_b = np.array([])
-
-    for a in regions_a:
-        for b in regions_b:
-            if not (np.isin(a.label, match_a) or np.isin(b.label, match_b)):
-                jacc = jaccard_roi(a.coords, b.coords)
-
-                if jacc > thres:
-                    match_a = np.append(match_a, a.label)
-                    match_b = np.append(match_b, b.label)
-                yield a.label, b.label, jacc
+    else:
+        return (regions)
