@@ -1,5 +1,5 @@
 """
-Utils
+U-Net
 Common utility functions and classes.
 Licensed under the MIT License (see LICENSE for details)
 Written by Matthias Griebel
@@ -209,14 +209,14 @@ def create_generator(img_list, msk_list, SEED=1, BATCH_SIZE=4):
 #  Analyze regions
 ############################################################
 
-def roi_eval(mask, image=None, thresh=0.5, min_pixel=15,
+def roi_eval(mask, image=None, threshold=0.5, min_pixel=15,
              do_watershed=True, exclude_border=True, return_mask=False):
     if mask.ndim == 3:
         mask = np.squeeze(mask, axis=2)
 
     # apply threshold to mask
-    # bw = closing(mask > thresh, square(2))
-    bw = (mask > thresh).astype(int)
+    # bw = closing(mask > threshold, square(2))
+    bw = (mask > threshold).astype(int)
 
     # label image regions
     label_image = label(bw)
