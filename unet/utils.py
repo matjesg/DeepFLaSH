@@ -206,11 +206,10 @@ def create_generator(img_list, msk_list, SEED=1, BATCH_SIZE=4):
     return (zip(image_generator, mask_generator))
 
 ############################################################
-#  Analyze regions
+#  Analyze regions and return labels
 ############################################################
 
-def roi_eval(mask, image=None, threshold=0.5, min_pixel=15,
-             do_watershed=True, exclude_border=True, return_mask=False):
+def label_mask(mask, threshold=0.5, min_pixel=15, do_watershed=True, exclude_border=True):
     if mask.ndim == 3:
         mask = np.squeeze(mask, axis=2)
 
@@ -241,16 +240,4 @@ def roi_eval(mask, image=None, threshold=0.5, min_pixel=15,
     _ = [np.place(label_image, label_image == i, 0) for i in range(1, label_image.max()) if
          np.sum(label_image == i) < min_pixel]
 
-    if image is not None:
-        if image.ndim == 3:
-            image = np.squeeze(image, axis=2)
-        regions = regionprops(label_image, intensity_image=image)
-
-    else:
-        regions = regionprops(label_image)
-
-    if return_mask:
-        return (label_image, regions)
-
-    else:
-        return (regions)
+    return (label_image)

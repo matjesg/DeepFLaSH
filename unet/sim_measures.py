@@ -21,43 +21,21 @@ def jaccard_pixelwise(mask_a, mask_b, threshold=0.5):
     return (1 - jac_dist)
 
 ############################################################
-#  Calculate Jaccard Similarity between two ROIs
-# (using coordinates)
-############################################################
-
-def jaccard_roi(a,b):
-  x = [':'.join(x) for x in a.astype(str).tolist()]
-  y = [':'.join(x) for x in b.astype(str).tolist()]
-  z = np.unique(np.concatenate((x,y)))
-
-  return((len(x) + len(y) - z.size)/z.size)
-
-############################################################
-#  Pair generator function for ROI matching
-############################################################
-
-def match_pairs(regions_a, regions_b, roi_threshold=0.5):
-    match_a = np.array([])
-    match_b = np.array([])
-
-    for a in regions_a:
-        for b in regions_b:
-            if not (np.isin(a.label, match_a) or np.isin(b.label, match_b)):
-                jacc = jaccard_roi(a.coords, b.coords)
-
-                if jacc >= roi_threshold:
-                    match_a = np.append(match_a, a.label)
-                    match_b = np.append(match_b, b.label)
-
-                    yield a.label, b.label, jacc
-
-############################################################
 #  Compare masks using ROI-wise Jaccard Similarity
 ############################################################
 
 def jaccard_roiwise(mask_a, mask_b, threshold=0.5, min_roi_pixel=15, roi_threshold=0.5):
-    regions_a = utils.roi_eval(mask_a, threshold=threshold, min_pixel=min_roi_pixel)
-    regions_b = utils.roi_eval(mask_b, threshold=threshold, min_pixel=min_roi_pixel)
-    res_list = list(match_pairs(regions_a, regions_b, roi_threshold=roi_threshold))
+    labels_a = utils.label_mask(mask_a, threshold=threshold, min_pixel=min_roi_pixel)
+    labels_b = utils.label_mask(mask_b, threshold=threshold, min_pixel=min_roi_pixel)
+    label_stack = np.dstack((labels_a, labels_b))
 
-    return (len(res_list) / (len(regions_a) + len(regions_b) - len(res_list)))
+    comb_cadidates = np.unique(label_stack.reshape(-1, label_stack.shape[2]), axis=0)
+    # Remove Zero Entries
+    comb_cadidates = comb_cadidates[np.prod(comb_cadidates, axis=1) > 0]
+
+    jac = [1 - jaccard((labels_a == x[0]).astype(np.uint8).flatten(), (labels_b == x[1]).astype(np.uint8).flatten()) for
+           x in comb_cadidates]
+    matches = np.sum(np.array(jac) >= roi_threshold)
+    union = (np.unique((labels_a)).size-1) + (np.unique((labels_b)).size-1) - matches
+
+    return(matches/union)
