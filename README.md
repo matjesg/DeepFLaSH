@@ -7,9 +7,9 @@ A deep learning pipeline for segmentation of fluorescent labels in brain section
 * Ignore the warning: 'This notebook was not authored by Google.' Run anyway.
 * Use Firefox or Google Chrome if you want to upload your images.
 
-Train or fine-tune your own model and segment your images [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matjesg/broccoli/blob/master/tune_and_predict.ipynb)
+Train or fine-tune your own model and segment your images [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matjesg/DeepFLaSH/blob/master/DeepFLaSH.ipynb)
 
-Demo notebook [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matjesg/broccoli/blob/master/demo.ipynb)
+Demo notebook [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matjesg/DeepFLaSH/blob/master/demo.ipynb)
 
 ## Model Library
 
