@@ -48,6 +48,11 @@ Trained on 36 image-mask pairs of Parvalbumin-labels in the dorsal hippocampus (
     
     <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/Parv.png" width="250" height="250" alt="Parv">
     <img src="https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/assets/Parv_mask.png" width="250" height="250" alt="Parv">
+    
+## Creating segmentation maps for DeepFLaSH with Fiji/ImageJ
+
+If you don't have labelled training data available, you can use this [instruction manual](https://github.com/matjesg/DeepFLaSH/raw/master/ImageJ/create_maps_howto.pdf) for creating segmentation maps.
+The ImagJ-Macro is available [here](https://raw.githubusercontent.com/matjesg/DeepFLaSH/master/ImageJ/Macro_create_maps.ijm).
 
 ## Citation
 Use this bibtex to cite our paper:
