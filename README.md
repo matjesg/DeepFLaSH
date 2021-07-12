@@ -1,3 +1,9 @@
+```diff
++ **Update**
++ An improved version, deepflash2,  is now available: https://github.com/matjesg/deepflash2
++ This version is no longer maintained.
+```
+
 # DeepFLaSH
 Official repository of DeepFLasH - a deep learning pipeline for segmentation of fluorescent labels in microscopy images.
 Check out our paper on [biorXiv](https://www.biorxiv.org/content/early/2018/11/19/473199?rss=1).
