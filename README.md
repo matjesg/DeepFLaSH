@@ -1,6 +1,8 @@
+# LINK TO [deepflash2](https://github.com/matjesg/deepflash2) and [deepflash2 docs](https://matjesg.github.io/deepflash2/)
+
 ```diff
 + **Update**
-+ An improved version, deepflash2,  is now available: https://github.com/matjesg/deepflash2
++ An improved version, deepflash2,  is now available.
 + This version is no longer maintained.
 ```
 
